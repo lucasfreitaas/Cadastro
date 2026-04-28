@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cadastro - Crie sua conta">
+  <title>Cadastro | Crie sua conta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+
+  <main class="login-container">
+    <div class="login-card" id="registerCard">
+      <div class="brand">
+        <div class="brand-icon" id="brandIcon">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <defs><linearGradient id="lg-register" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs>
+            <rect width="40" height="40" rx="12" fill="url(#lg-register)"/>
+            <path d="M20 12v16m-8-8h16" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h1 class="brand-name">Criar Conta</h1>
+        <p class="brand-subtitle">Preencha os dados abaixo para se cadastrar.</p>
+      </div>
+
+      <form id="registerForm" class="login-form" autocomplete="off" novalidate>
+        
+        <div class="form-group" id="nameGroup">
+          <label for="name" class="form-label">Nome Completo</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <input type="text" id="name" class="form-input" placeholder="Digite seu nome completo" required autocomplete="off">
+          </div>
+          <span class="form-error" id="nameError"></span>
+        </div>
+
+        <div class="form-group" id="identityGroup">
+          <label for="identity" class="form-label" id="identityLabel">E-mail ou Telefone</label>
+          <div class="input-wrapper" id="identityWrapper">
+            <span class="input-icon" id="identityIcon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+            </span>
+            <input type="text" id="identity" class="form-input" placeholder="Digite seu e-mail ou telefone" required autocomplete="off">
+            <span class="input-badge" id="identityBadge"></span>
+          </div>
+          <span class="form-error" id="identityError"></span>
+        </div>
+
+        <div class="form-group" id="passwordGroup">
+          <label for="password" class="form-label">Senha</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="password" class="form-input" placeholder="Crie uma senha" required autocomplete="off">
+            <button type="button" class="toggle-password" id="togglePassword" aria-label="Mostrar senha">
+              <svg id="eyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="eyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <span class="form-error" id="passwordError"></span>
+        </div>
+
+        <button type="submit" class="btn-login" id="btnRegister">
+          <span class="btn-text">Cadastrar</span>
+          <span class="btn-loader" id="btnLoader"><svg width="20" height="20" viewBox="0 0 24 24" class="spinner"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg></span>
+        </button>
+
+      </form>
+
+      <div class="signup-link">
+        <p>Já tem uma conta? <a href="index.html">Faça login</a></p>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"><span class="toast-icon" id="toastIcon"></span><span class="toast-message" id="toastMessage"></span></div>
+  <script src="cadastro.js"></script>
+</body>
+</html>

@@ -1,25 +1,29 @@
 /* ============================================
-   LOGIN PAGE — SCRIPT
+   REGISTER PAGE — SCRIPT
    ============================================ */
 (function () {
   'use strict';
 
   // ─── DOM References ────────────────────────
-  const form          = document.getElementById('loginForm');
+  const form          = document.getElementById('registerForm');
+  const nameInput     = document.getElementById('name');
   const identityInput = document.getElementById('identity');
   const passwordInput = document.getElementById('password');
+  
   const identityLabel = document.getElementById('identityLabel');
   const identityIcon  = document.getElementById('identityIcon');
   const identityBadge = document.getElementById('identityBadge');
   const identityWrap  = document.getElementById('identityWrapper');
+  
+  const nameError     = document.getElementById('nameError');
   const identityError = document.getElementById('identityError');
   const passwordError = document.getElementById('passwordError');
+  
   const togglePwdBtn  = document.getElementById('togglePassword');
   const eyeOpen       = document.getElementById('eyeOpen');
   const eyeClosed     = document.getElementById('eyeClosed');
-  const rememberMe    = document.getElementById('rememberMe');
-  const btnLogin      = document.getElementById('btnLogin');
-  const signupLink    = document.getElementById('signupLink');
+  
+  const btnRegister   = document.getElementById('btnRegister');
   const toast         = document.getElementById('toast');
   const toastIcon     = document.getElementById('toastIcon');
   const toastMsg      = document.getElementById('toastMessage');
@@ -34,27 +38,8 @@
   // ─── State ─────────────────────────────────
   let fieldMode = 'none'; // 'none' | 'email' | 'phone'
 
-  // ─── LocalStorage Helpers ──────────────────
-  const STORAGE_KEY = 'login_cache';
-
-  function saveToCache(data) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (_) {}
-  }
-
-  function loadFromCache() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (_) { return null; }
-  }
-
-  function clearCache() {
-    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
-  }
-
   // ─── Phone Mask (BR format) ────────────────
   function formatPhone(digits) {
-    // Expected: (XX) XXXXX-XXXX  or  (XX) XXXX-XXXX
     const d = digits.replace(/\D/g, '').slice(0, 11);
     if (d.length === 0) return '';
     if (d.length <= 2)  return '(' + d;
@@ -79,13 +64,11 @@
     const firstChar = raw.charAt(0);
 
     if (/\d/.test(firstChar)) {
-      // Phone mode
       if (fieldMode !== 'phone') setMode('phone');
       const digits = rawDigits(raw);
       identityInput.value = formatPhone(digits);
       identityInput.setAttribute('maxlength', '15');
     } else {
-      // Email mode
       if (fieldMode !== 'email') setMode('email');
       identityInput.removeAttribute('maxlength');
     }
@@ -94,7 +77,6 @@
   function setMode(mode) {
     fieldMode = mode;
 
-    // Update icon
     if (mode === 'email') {
       identityIcon.innerHTML = ICONS.email;
       identityLabel.textContent = 'E-mail';
@@ -117,6 +99,16 @@
   }
 
   // ─── Validation ────────────────────────────
+  function validateName() {
+    const val = nameInput.value.trim();
+    if (!val) {
+      showError(nameInput.closest('.input-wrapper'), nameError, 'O nome é obrigatório.');
+      return false;
+    }
+    clearError(nameInput.closest('.input-wrapper'), nameError);
+    return true;
+  }
+
   function validateIdentity() {
     const val = identityInput.value.trim();
     if (!val) {
@@ -187,6 +179,10 @@
   });
 
   // ─── Input Events ─────────────────────────
+  nameInput.addEventListener('input', function() {
+    if (nameInput.closest('.input-wrapper').classList.contains('error')) validateName();
+  });
+
   identityInput.addEventListener('input', function () {
     detectAndFormat();
     if (identityWrap.classList.contains('error')) validateIdentity();
@@ -200,12 +196,13 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
+    const isNameOk      = validateName();
     const isIdentityOk  = validateIdentity();
     const isPasswordOk  = validatePassword();
 
-    if (!isIdentityOk || !isPasswordOk) {
+    if (!isNameOk || !isIdentityOk || !isPasswordOk) {
       // Shake animation
-      const card = document.getElementById('loginCard');
+      const card = document.getElementById('registerCard');
       card.style.animation = 'none';
       void card.offsetWidth; // force reflow
       card.style.animation = 'shake 0.4s ease';
@@ -213,52 +210,25 @@
     }
 
     // Loading state
-    btnLogin.classList.add('loading');
-    btnLogin.disabled = true;
+    btnRegister.classList.add('loading');
+    btnRegister.disabled = true;
 
-    // Save to cache
-    const loginData = {
-      identity: identityInput.value.trim(),
-      identityType: fieldMode,
-      rememberMe: rememberMe.checked,
-      lastLogin: new Date().toISOString()
-    };
-
-    if (rememberMe.checked) {
-      saveToCache(loginData);
-    } else {
-      clearCache();
-    }
-
-    // Simulated login (replace with real API call)
+    // Simulated registration
     setTimeout(function () {
-      btnLogin.classList.remove('loading');
-      btnLogin.disabled = false;
-      showToast('Login realizado com sucesso!', 'success');
+      btnRegister.classList.remove('loading');
+      showToast('Cadastro realizado com sucesso!', 'success');
 
       // Success glow on card
+      nameInput.closest('.input-wrapper').classList.add('success');
       identityWrap.classList.add('success');
       passwordInput.closest('.input-wrapper').classList.add('success');
+      
+      // Redirect to login after a short delay
+      setTimeout(function() {
+        window.location.href = 'index.html';
+      }, 1500);
     }, 1800);
   });
-
-  // ─── Forgot Password ──────────────────────
-  document.getElementById('forgotPassword').addEventListener('click', function (e) {
-    e.preventDefault();
-    showToast('Recuperação de senha em breve!', 'error');
-  });
-
-  // ─── Restore Cache on Load ─────────────────
-  function restoreFromCache() {
-    const cached = loadFromCache();
-    if (cached && cached.rememberMe) {
-      identityInput.value = cached.identity || '';
-      rememberMe.checked  = true;
-      detectAndFormat();
-    }
-  }
-
-  restoreFromCache();
 
   // ─── Shake Keyframes (injected) ────────────
   var style = document.createElement('style');
